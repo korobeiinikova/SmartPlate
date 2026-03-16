@@ -1,0 +1,5 @@
+djvenv/
+.idea/
+__pycache__/
+*.pyc
+.env
