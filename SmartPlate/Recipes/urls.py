@@ -2,6 +2,7 @@ from django.urls import path, register_converter
 from Recipes import views, converters
 
 register_converter(converters.PositiveIntConverter, "posint")
+app_name = 'Recipes'
 
 urlpatterns = [
      path('', views.index, name='home'),

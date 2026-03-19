@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SmartPlate{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="menu">
+                <li><a href="{% url 'home' %}">Главная (проекта)</a></li>
+                <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
+                <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
+                {% block mainmenu %}{% endblock %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 SmartPlate</p>
+    </footer>
+</body>
+</html>

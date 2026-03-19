@@ -1,49 +1,101 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.template.loader import render_to_string
 
-#####################
-# Create your views here.
+# Временные данные
+cats_db = [
+    {'id': 1, 'slug': 'breakfast', 'name': 'Завтрак'},
+    {'id': 2, 'slug': 'dinner', 'name': 'Обед'},
+    {'id': 3, 'slug': 'lunch', 'name': 'Ужин'},
+    {'id': 4, 'slug': 'desserts', 'name': 'Десерты'},
+]
+
+posts_db = [
+    {
+        'id': 1,
+        'title': 'Омлет с овощами',
+        'slug': 'omlet-ovoshi',
+        'content': 'Простой и быстрый рецепт омлета с помидорами и перцем. Идеально для завтрака.',
+        'category': cats_db[0],
+        'is_published': True,
+    },
+    {
+        'id': 2,
+        'title': 'Паста карбонара',
+        'slug': 'pasta-carbonara',
+        'content': 'Классическая итальянская паста с беконом и сыром. Подходит для обеда.',
+        'category': cats_db[1],
+        'is_published': True,
+    },
+    {
+        'id': 3,
+        'title': 'Куриный суп',
+        'slug': 'kurinii-sup',
+        'content': 'Легкий куриный суп с лапшой. Отличный ужин.',
+        'category': cats_db[2],
+        'is_published': False,
+    },
+    {
+        'id': 4,
+        'title': 'Шоколадный брауни',
+        'slug': 'shokoladnii-brauni',
+        'content': 'Очень шоколадный десерт с хрустящей корочкой и мягкой серединой.',
+        'category': cats_db[3],
+        'is_published': True,
+    },
+]
+
+menu = ["О нас", "Контакты", "Помощь"]
+
+
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
-menu = ["1", "2", "3"]
 
 def index(request):
     data = {
-        'title':'gлавная страница!',
-        'menu':menu,
-        'int':27,
+        'title': 'Главная страница рецептов',
+        'menu': menu,
+        'int': 27,
+        'posts': posts_db,
+        'cat_selected': 0,
     }
-
     return render(request, 'home.html', context=data)
 
 
 def categories_recipes(request, cat_slug):
-    categories = ['breakfast', 'dinner', 'lunch', 'desserts']
-    if cat_slug not in categories:
+    category = next((cat for cat in cats_db if cat['slug'] == cat_slug), None)
+    if not category:
         raise Http404("Категория не найдена")
-
-    text = f"<h1>Рецепты по категориям</h1><p >slug: {cat_slug}</p>"
-    if request.method == 'GET':
-        max_calories = request.GET.get('max_calories')
-        if max_calories:
-            text += f", фильтр по калориям ≤ {max_calories}"
-    if request.method == 'POST':
-        print(request.POST)
-    return HttpResponse(text)
+    posts = [p for p in posts_db if p['category']['id'] == category['id'] and p['is_published']]
+    data = {
+        'title': f'Рецепты: {category["name"]}',
+        'menu': menu,
+        'posts': posts,
+        'cat_name': category['name'],
+        'cat_selected': category['id'],
+    }
+    return render(request, 'categories.html', context=data)
 
 
 def recipe_detail(request, recipe_slug):
-    recipes = ['pizza', 'pasta', 'salat']
-    if recipe_slug not in recipes:
-        raise Http404("Категория не найдена")
-
-    return HttpResponse("Recipe.")
+    post = next((p for p in posts_db if p['slug'] == recipe_slug), None)
+    if not post:
+        raise Http404("Рецепт не найден")
+    data = {
+        'title': post['title'],
+        'menu': menu,
+        'post': post,
+    }
+    return render(request, 'recipe_detail.html', context=data)
 
 
 def recipes_by_portions(request, count):
-    return HttpResponse(f"Рецепты на {count} порции")
+    data = {
+        'title': f'Рецепты на {count} порции',
+        'menu': menu,
+        'count': count,
+    }
+    return render(request, 'portion.html', context=data)
 
 
 def home(request):
