@@ -14,7 +14,7 @@ posts_db = [
         'id': 1,
         'title': 'Омлет с овощами',
         'slug': 'omlet-ovoshi',
-        'content': 'Простой и быстрый рецепт омлета с помидорами и перцем. Идеально для завтрака.',
+        'content': 'Простой и быстрый рецепт омлета с помидорами и перцем. Подходит для завтрака.',
         'category': cats_db[0],
         'is_published': True,
     },
@@ -38,14 +38,11 @@ posts_db = [
         'id': 4,
         'title': 'Шоколадный брауни',
         'slug': 'shokoladnii-brauni',
-        'content': 'Очень шоколадный десерт с хрустящей корочкой и мягкой серединой.',
+        'content': 'Шоколадный десерт с хрустящей корочкой и мягкой серединой.',
         'category': cats_db[3],
         'is_published': True,
     },
 ]
-
-menu = ["О нас", "Контакты", "Помощь"]
-
 
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
@@ -54,8 +51,7 @@ def page_not_found(request, exception):
 def index(request):
     data = {
         'title': 'Главная страница рецептов',
-        'menu': menu,
-        'int': 27,
+        'int': 25,
         'posts': posts_db,
         'cat_selected': 0,
     }
@@ -69,7 +65,6 @@ def categories_recipes(request, cat_slug):
     posts = [p for p in posts_db if p['category']['id'] == category['id'] and p['is_published']]
     data = {
         'title': f'Рецепты: {category["name"]}',
-        'menu': menu,
         'posts': posts,
         'cat_name': category['name'],
         'cat_selected': category['id'],
@@ -83,7 +78,6 @@ def recipe_detail(request, recipe_slug):
         raise Http404("Рецепт не найден")
     data = {
         'title': post['title'],
-        'menu': menu,
         'post': post,
     }
     return render(request, 'recipe_detail.html', context=data)
@@ -92,7 +86,6 @@ def recipe_detail(request, recipe_slug):
 def recipes_by_portions(request, count):
     data = {
         'title': f'Рецепты на {count} порции',
-        'menu': menu,
         'count': count,
     }
     return render(request, 'portion.html', context=data)
@@ -107,11 +100,6 @@ def home(request):
         ("Категория desserts", "/Recipes/cats/desserts/"),
         ("Категория breakfast с GET-параметром (max_calories=300)", "/Recipes/cats/breakfast/?max_calories=300"),
         ("Рецепты на 4 порции", "/Recipes/portion/4/"),
-        ("Рецепт pizza", "/Recipes/pizza/"),
-        ("Рецепт pasta", "/Recipes/pasta/"),
-        ("Рецепт salat", "/Recipes/salat/"),
-        ("Несуществующая категория (404)", "/Recipes/cats/aaa/"),
-        ("Несуществующий рецепт (404)", "/Recipes/unknown/"),
         ("Главная Users", "/Users/"),
         ("Регистрация Users", "/Users/registration/"),
         ("Профиль Users", "/Users/profile/"),

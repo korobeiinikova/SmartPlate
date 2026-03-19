@@ -8,9 +8,11 @@
 </head>
 <body>
     <header>
+        <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
+
         <nav>
             <ul class="menu">
-                <li><a href="{% url 'home' %}">Главная (проекта)</a></li>
+                <li><a href="{% url 'home' %}">Главная</a></li>
                 <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
                 <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
                 {% block mainmenu %}{% endblock %}
@@ -21,7 +23,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer>
-        <p>&copy; 2025 SmartPlate</p>
+        <p>&copy; 2026 SmartPlate</p>
     </footer>
 </body>
 </html>

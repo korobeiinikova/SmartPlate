@@ -2,7 +2,6 @@ from django import template
 
 register = template.Library()
 
-# Простой тег – возвращает список категорий
 @register.simple_tag
 def get_categories():
     categories = [
@@ -13,7 +12,6 @@ def get_categories():
     ]
     return categories
 
-# Inclusion-тег – выводит меню категорий с подсветкой выбранной
 @register.inclusion_tag('categories_menu.html')
 def show_categories(cat_selected=0):
     categories = [

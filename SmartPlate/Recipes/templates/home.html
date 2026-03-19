@@ -6,14 +6,7 @@
 
 {% block content %}
     <h1>{{ title|capfirst }}</h1>
-    <p>Число: {{ int|add:"5" }}</p>   {# пример фильтра add #}
-
-    <h2>Меню рецептов</h2>
-    <ul>
-        {% for item in menu %}
-            <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
+    <p>Число: {{ int|add:"5" }} пример фильтра add (было 25, применили "|add:"5"")</p>
 
     <h2>Категории</h2>
     <ul>
