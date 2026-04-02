@@ -1,12 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title>{{title}}</title>
-</head>
-<body>
-<h1>{{title|capfirst|cut:" "|cut:"!"}}</h1>
-<p >{{menu|join:" | "}}</p>
-<p >{{int|add:"40"|divisibleby:"2"}}</p>
-<p >{{"The Main Page"|slugify}}</p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ title|capfirst }}</h1>
+
+    <h2>Список рецептов</h2>
+    {% if posts %}
+        <ul>
+            {% for post in posts %}
+                {% if post.is_published %}
+                    <li>
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.description|truncatewords:30|linebreaks }}</p>
+                        <p><a href="{% url 'Recipes:recipe_detail' post.slug %}">Читать далее</a></p>
+                        {% if not forloop.last %}<hr>{% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет рецептов.</p>
+    {% endif %}
+{% endblock %}

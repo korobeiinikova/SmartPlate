@@ -1,17 +1,14 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
+from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse("Страница приложения users.")
-
+    return render(request, 'index.html')
 
 def registration(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        return redirect('profile')
-    return HttpResponse("Страница регистрации.")
-
+        return redirect('Users:profile')
+    return render(request, 'registration.html')
 
 def profile(request):
-    return HttpResponse("<h1>Личный кабинет пользователя</h1>")
+    return render(request, 'profile.html')

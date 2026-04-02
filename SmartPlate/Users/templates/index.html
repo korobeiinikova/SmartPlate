@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+    <h1>Страница приложения Users</h1>
+    <p>Добро пожаловать в раздел пользователей.</p>
+    <ul>
+        <li><a href="{% url 'Users:registration' %}">Регистрация</a></li>
+        <li><a href="{% url 'Users:profile' %}">Профиль</a></li>
+    </ul>
+{% endblock %}

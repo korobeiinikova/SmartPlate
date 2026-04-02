@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Рецепты на {{ count }} порции{% endblock %}
+
+{% block content %}
+    <h1>Рецепты на {{ count }} порции</h1>
+    <p>Здесь будут рецепты, рассчитанные на {{ count }} порций.</p>
+{% endblock %}

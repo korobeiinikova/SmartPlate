@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SmartPlate{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
+
+        <nav>
+            <ul class="menu">
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
+                <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
+                {% block mainmenu %}{% endblock %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2026 SmartPlate</p>
+    </footer>
+</body>
+</html>

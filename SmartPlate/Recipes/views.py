@@ -1,52 +1,42 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.template.loader import render_to_string
+from .models import Recipe   # импортируем модель
 
-
-# Create your views here.
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
-menu = ["1", "2", "3"]
-
 def index(request):
+    # Получаем только опубликованные рецепты
+    posts = Recipe.published.all()
     data = {
-        'title':'gлавная страница!',
-        'menu':menu,
-        'int':27,
+        'title': 'Главная страница рецептов',
+        'int': 25,
+        'posts': posts,
+        'cat_selected': 0,
     }
-
     return render(request, 'home.html', context=data)
 
-
 def categories_recipes(request, cat_slug):
-    categories = ['breakfast', 'dinner', 'lunch', 'desserts']
-    if cat_slug not in categories:
-        raise Http404("Категория не найдена")
-
-    text = f"<h1>Рецепты по категориям</h1><p >slug: {cat_slug}</p>"
-    if request.method == 'GET':
-        max_calories = request.GET.get('max_calories')
-        if max_calories:
-            text += f", фильтр по калориям ≤ {max_calories}"
-    if request.method == 'POST':
-        print(request.POST)
-    return HttpResponse(text)
-
+    # Временно отключено (будет в ЛР8)
+    raise Http404("Категории будут добавлены в следующей лабораторной работе")
 
 def recipe_detail(request, recipe_slug):
-    recipes = ['pizza', 'pasta', 'salat']
-    if recipe_slug not in recipes:
-        raise Http404("Категория не найдена")
-
-    return HttpResponse("Recipe.")
-
+    post = get_object_or_404(Recipe, slug=recipe_slug)
+    data = {
+        'title': post.title,
+        'post': post,
+    }
+    return render(request, 'recipe_detail.html', context=data)
 
 def recipes_by_portions(request, count):
-    return HttpResponse(f"Рецепты на {count} порции")
-
+    data = {
+        'title': f'Рецепты на {count} порции',
+        'count': count,
+    }
+    return render(request, 'portion.html', context=data)
 
 def home(request):
+    # Страница для тестирования (не используется в основном сайте)
     links = [
         ("Главная Recipes", "/Recipes/"),
         ("Категория breakfast", "/Recipes/cats/breakfast/"),
@@ -55,11 +45,6 @@ def home(request):
         ("Категория desserts", "/Recipes/cats/desserts/"),
         ("Категория breakfast с GET-параметром (max_calories=300)", "/Recipes/cats/breakfast/?max_calories=300"),
         ("Рецепты на 4 порции", "/Recipes/portion/4/"),
-        ("Рецепт pizza", "/Recipes/pizza/"),
-        ("Рецепт pasta", "/Recipes/pasta/"),
-        ("Рецепт salat", "/Recipes/salat/"),
-        ("Несуществующая категория (404)", "/Recipes/cats/aaa/"),
-        ("Несуществующий рецепт (404)", "/Recipes/unknown/"),
         ("Главная Users", "/Users/"),
         ("Регистрация Users", "/Users/registration/"),
         ("Профиль Users", "/Users/profile/"),
