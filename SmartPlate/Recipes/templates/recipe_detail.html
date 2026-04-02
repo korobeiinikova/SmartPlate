@@ -5,9 +5,8 @@
 
 {% block content %}
     <h1>{{ post.title }}</h1>
-    <p>Категория: <a href="{% url 'Recipes:cats' post.category.slug %}">{{ post.category.name }}</a></p>
     <div>
-        {{ post.content|linebreaks }}
+        {{ post.instructions|linebreaks }}
     </div>
     <p><a href="{% url 'Recipes:home' %}">Назад к списку</a></p>
 {% endblock %}

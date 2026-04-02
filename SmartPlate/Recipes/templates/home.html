@@ -1,20 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load recipe_tags %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     <h1>{{ title|capfirst }}</h1>
-    <p>Число: {{ int|add:"5" }} пример фильтра add (было 25, применили "|add:"5"")</p>
-
-    <h2>Категории</h2>
-    <ul>
-        {% get_categories as cats %}
-        {% for cat in cats %}
-            <li><a href="{% url 'Recipes:cats' cat.slug %}">{{ cat.name }}</a></li>
-        {% endfor %}
-    </ul>
 
     <h2>Список рецептов</h2>
     {% if posts %}
@@ -23,8 +13,7 @@
                 {% if post.is_published %}
                     <li>
                         <h3>{{ post.title }}</h3>
-                        <p>{{ post.content|truncatewords:30|linebreaks }}</p>
-                        <p>Категория: {{ post.category.name }}</p>
+                        <p>{{ post.description|truncatewords:30|linebreaks }}</p>
                         <p><a href="{% url 'Recipes:recipe_detail' post.slug %}">Читать далее</a></p>
                         {% if not forloop.last %}<hr>{% endif %}
                     </li>
