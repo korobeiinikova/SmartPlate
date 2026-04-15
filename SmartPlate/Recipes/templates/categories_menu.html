@@ -1,8 +1,12 @@
-{% for cat in cats %}
-    <li>
-        <a href="{% url 'Recipes:category' cat.slug %}"
-           class="tag {% if cat.id == cat_selected %}selected-tag{% endif %}">
-            {{ cat.name }}
-        </a>
-    </li>
-{% endfor %}
+{% if cats %}
+    <div class="categories-cloud">
+        {% for cat in cats %}
+            <a href="{% url 'Recipes:category' cat.slug %}"
+               class="category-tag {% if cat.id == cat_selected %}selected-category{% endif %}">
+                {{ cat.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Категорий пока нет</p>
+{% endif %}

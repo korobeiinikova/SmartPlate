@@ -10,11 +10,9 @@
         {% if tags %}
             <div class="recipe-tags">
                 <strong>Теги:</strong>
-                <ul>
-                    {% for t in tags %}
-                        <li><a href="{{ t.get_absolute_url }}">{{ t.name }}</a></li>
-                    {% endfor %}
-                </ul>
+                {% for t in tags %}
+                    {{ t.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             </div>
         {% endif %}
     {% endwith %}

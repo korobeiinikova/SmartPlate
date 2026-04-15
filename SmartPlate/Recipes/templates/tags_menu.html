@@ -1,9 +1,11 @@
 {% if tags %}
-    <ul class="tags-list">
+    <div class="tags-cloud">
         {% for t in tags %}
-            <li><a href="{{ t.get_absolute_url }}">{{ t.name }}</a></li>
+            <a href="{{ t.get_absolute_url }}" class="tag-link">
+                {{ t.name }} ({{ t.total }})
+            </a>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
-    <li>Тегов пока нет</li>
+    <p>Тегов пока нет</p>
 {% endif %}

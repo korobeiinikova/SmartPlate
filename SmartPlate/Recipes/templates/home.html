@@ -7,6 +7,12 @@
 {% block content %}
     <h1>{{ title|capfirst }}</h1>
 
+    {# Блок для вывода категорий #}
+    <div class="categories-section">
+        <h3>Категории</h3>
+        {% show_categories cat_selected %}
+    </div>
+
     {# Блок для вывода тегов #}
     <div class="tags-section">
         <h3>Теги</h3>

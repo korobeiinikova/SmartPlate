@@ -48,3 +48,46 @@ footer {
     font-weight: bold;
     color: #ff6600;
 }
+
+/* Стили для категорий и тегов */
+.categories-section, .tags-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.categories-section h3, .tags-section h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.categories-cloud, .tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category-tag, .tag-link {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #e0e0e0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9em;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.category-tag:hover, .tag-link:hover {
+    background-color: #ff6600;
+    color: white;
+}
+
+.selected-category {
+    background-color: #ff6600;
+    color: white;
+    font-weight: bold;
+}
