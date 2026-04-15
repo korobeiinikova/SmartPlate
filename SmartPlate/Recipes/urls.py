@@ -6,7 +6,8 @@ app_name = 'Recipes'
 
 urlpatterns = [
     path('', views.index, name='home'),
-    # path('cats/<slug:cat_slug>/', views.categories_recipes, name='cats'),  # отключено для ЛР7
+    path('category/<slug:cat_slug>/', views.show_category, name='category'),
+    path('tag/<slug:tag_slug>/', views.show_tag_postlist, name='tag'),
     path('portion/<posint:count>/', views.recipes_by_portions, name='recipes_by_portions'),
     path('<slug:recipe_slug>/', views.recipe_detail, name='recipe_detail'),
 ]

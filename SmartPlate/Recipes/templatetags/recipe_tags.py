@@ -1,23 +1,15 @@
 from django import template
+from Recipes.models import RecipeCategory, Tag
+from django.db.models import Count
 
 register = template.Library()
 
-@register.simple_tag
-def get_categories():
-    categories = [
-        {'id': 1, 'slug': 'breakfast', 'name': 'Завтрак'},
-        {'id': 2, 'slug': 'dinner', 'name': 'Обед'},
-        {'id': 3, 'slug': 'lunch', 'name': 'Ужин'},
-        {'id': 4, 'slug': 'desserts', 'name': 'Десерты'},
-    ]
-    return categories
-
 @register.inclusion_tag('categories_menu.html')
 def show_categories(cat_selected=0):
-    categories = [
-        {'id': 1, 'slug': 'breakfast', 'name': 'Завтрак'},
-        {'id': 2, 'slug': 'dinner', 'name': 'Обед'},
-        {'id': 3, 'slug': 'lunch', 'name': 'Ужин'},
-        {'id': 4, 'slug': 'desserts', 'name': 'Десерты'},
-    ]
-    return {'categories': categories, 'cat_selected': cat_selected}
+    cats = RecipeCategory.objects.all()
+    return {'cats': cats, 'cat_selected': cat_selected}
+
+@register.inclusion_tag('tags_menu.html')
+def show_all_tags():
+    tags = Tag.objects.annotate(total=Count('recipes')).filter(total__gt=0)
+    return {'tags': tags}

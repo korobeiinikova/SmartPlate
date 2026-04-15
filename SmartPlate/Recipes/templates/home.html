@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load recipe_tags %}   {# <-- добавьте эту строку #}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     <h1>{{ title|capfirst }}</h1>
+
+    {# Блок для вывода тегов #}
+    <div class="tags-section">
+        <h3>Теги</h3>
+        {% show_all_tags %}
+    </div>
 
     <h2>Список рецептов</h2>
     {% if posts %}

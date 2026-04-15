@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load recipe_tags %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -8,22 +9,37 @@
 </head>
 <body>
     <header>
-        <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
-
+        <div class="logo">
+            <a href="{% url 'Recipes:home' %}">🍽️ SmartPlate</a>
+        </div>
         <nav>
-            <ul class="menu">
-                <li><a href="{% url 'home' %}">Главная</a></li>
-                <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
-                <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
-                {% block mainmenu %}{% endblock %}
+            <ul>
+                <li><a href="{% url 'Recipes:home' %}">Главная</a></li>
             </ul>
         </nav>
     </header>
+
     <main>
-        {% block content %}{% endblock %}
+        <table width="100%">
+            <tr>
+                <td width="20%" valign="top" class="sidebar">
+                    <ul>
+                        <li><a href="{% url 'Recipes:home' %}">Все рецепты</a></li>
+                        <li>Категории:</li>
+                        {% show_categories cat_selected|default:0 %}
+                        <li>Теги:</li>
+                        {% show_all_tags %}
+                    </ul>
+                </td>
+                <td valign="top">
+                    {% block content %}{% endblock %}
+                </td>
+            </tr>
+        </table>
     </main>
+
     <footer>
-        <p>&copy; 2026 SmartPlate</p>
+        <p>&copy; 2026 SmartPlate. Все права защищены.</p>
     </footer>
 </body>
 </html>

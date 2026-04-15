@@ -1,7 +1,8 @@
-{% for cat in categories %}
-    {% if cat.id == cat_selected %}
-        <li class="selected">{{ cat.name }}</li>
-    {% else %}
-        <li><a href="{% url 'Recipes:cats' cat.slug %}">{{ cat.name }}</a></li>
-    {% endif %}
+{% for cat in cats %}
+    <li>
+        <a href="{% url 'Recipes:category' cat.slug %}"
+           class="tag {% if cat.id == cat_selected %}selected-tag{% endif %}">
+            {{ cat.name }}
+        </a>
+    </li>
 {% endfor %}
