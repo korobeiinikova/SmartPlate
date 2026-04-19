@@ -1,0 +1,15 @@
+#header {
+    background: #E67E22;
+}
+#header, .module caption {
+    background: #E67E22;
+}
+div.breadcrumbs {
+    background: #D35400;
+}
+#header a:link, #header a:visited {
+    color: white;
+}
+.submit-row input.default {
+    background: #E67E22;
+}
