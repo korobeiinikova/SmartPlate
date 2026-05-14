@@ -16,7 +16,9 @@
             </div>
         {% endif %}
     {% endwith %}
-
+    {% if post.photo %}
+        <img src="{{ post.photo.url }}" alt="{{ post.title }}" style="max-width: 300px;">
+    {% endif %}
     <div>{{ post.instructions|linebreaks }}</div>
     <p><a href="{% url 'Recipes:home' %}">Назад к списку</a></p>
 {% endblock %}

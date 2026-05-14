@@ -73,6 +73,9 @@ class Recipe(models.Model):
     carbs = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Углеводы (г)")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
     tags = models.ManyToManyField('Tag', blank=True, related_name='recipes', verbose_name="Теги")
+    photo = models.ImageField(upload_to="recipes_photos/%Y/%m/%d/",
+                              blank=True, null=True,
+                              verbose_name="Изображение рецепта")
 
     class Meta:
         ordering = ['-time_create']

@@ -1,6 +1,6 @@
 from django.contrib import admin, messages
 from .models import Recipe, RecipeCategory, Tag, Product, RecipeIngredient, RecipeDetail
-
+from django.utils.html import mark_safe
 # Register your models here.
 admin.site.register(Tag)
 admin.site.register(Product)
@@ -31,7 +31,12 @@ class CalorieFilter(admin.SimpleListFilter):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', 'is_published', 'time_create', 'brief_info', 'calories_status')
+    @admin.display(description="Изображение")
+    def preview_photo(self, obj):
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" width="100" />')
+        return "Нет фото"
+    list_display = ('id', 'title', 'category', 'is_published', 'time_create', 'brief_info', 'calories_status', 'preview_photo')
     list_display_links = ('id', 'title')
     ordering = ['-time_create', 'title']
     list_per_page = 5
@@ -39,8 +44,8 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description', 'instructions', 'category__name']
     list_filter = ['category', 'is_published', 'tags', CalorieFilter]
     fields = ('title', 'slug', 'category', 'description', 'instructions',
-              'calories', 'proteins', 'fats', 'carbs', 'tags', 'is_published')
-    readonly_fields = ('slug',)
+              'calories', 'proteins', 'fats', 'carbs', 'tags', 'is_published', 'photo', 'preview_photo')
+    readonly_fields = ('slug', 'preview_photo')
     filter_horizontal = ('tags',)
 
     @admin.display(description="Краткое описание")

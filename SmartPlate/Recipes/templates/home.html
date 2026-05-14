@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load recipe_tags %}   {# <-- добавьте эту строку #}
+{% load recipe_tags %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -36,4 +36,5 @@
     {% else %}
         <p>Нет рецептов.</p>
     {% endif %}
+    <p><a href="{% url 'Recipes:add_recipe_model' %}">Добавить рецепт</a></p>
 {% endblock %}
