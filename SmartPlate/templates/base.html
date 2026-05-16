@@ -9,10 +9,10 @@
 <body>
     <header>
         <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
-
         <nav>
             <ul class="menu">
                 <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
+                <li><a href="{% url 'Recipes:about' %}">О сайте</a></li>
                 <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
                 {% block mainmenu %}{% endblock %}
             </ul>
@@ -20,6 +20,7 @@
     </header>
     <main>
         {% block content %}{% endblock %}
+        {% block navigation %}{% endblock %}
     </main>
     <footer>
         <p>&copy; 2026 SmartPlate</p>

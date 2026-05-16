@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>О сайте</h1>
+<p>Сайт для публикации кулинарных рецептов.</p>
+
+{% for recipe in page_obj %}
+    <p>{{ recipe.title }}</p>
+{% endfor %}
+
+<nav>
+    <ul>
+        {% for p in page_obj.paginator.page_range %}
+            <li><a href="?page={{ p }}">{{ p }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock %}

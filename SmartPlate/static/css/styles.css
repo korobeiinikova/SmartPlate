@@ -57,19 +57,16 @@ footer {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
 .categories-section h3, .tags-section h3 {
     margin-top: 0;
     color: #333;
     font-size: 1.2em;
 }
-
 .categories-cloud, .tags-cloud {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
-
 .category-tag, .tag-link {
     display: inline-block;
     padding: 8px 12px;
@@ -80,14 +77,50 @@ footer {
     font-size: 0.9em;
     transition: background-color 0.3s, color 0.3s;
 }
-
 .category-tag:hover, .tag-link:hover {
     background-color: #ff6600;
     color: white;
 }
-
 .selected-category {
     background-color: #ff6600;
     color: white;
+    font-weight: bold;
+}
+
+/* Пагинация */
+.list-pages {
+    margin: 20px 0;
+    text-align: center;
+}
+.list-pages ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+.list-pages li {
+    display: inline-block; /* гарантия, что элементы не будут блочными */
+}
+.list-pages a, .list-pages .page-num-selected {
+    display: inline-block;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    color: #333;
+    background-color: #fff;
+    border-radius: 3px;
+}
+.list-pages a:hover {
+    background-color: #ff6600;
+    color: white;
+    border-color: #ff6600;
+}
+.list-pages .page-num-selected {
+    background-color: #ff6600;
+    color: white;
+    border-color: #ff6600;
     font-weight: bold;
 }
