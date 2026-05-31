@@ -11,10 +11,21 @@
         <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
         <nav>
             <ul class="menu">
-                <li><a href="{% url 'Recipes:home' %}">Рецепты</a></li>
-                <li><a href="{% url 'Recipes:about' %}">О сайте</a></li>
-                <li><a href="{% url 'Users:home' %}">Пользователи</a></li>
-                {% block mainmenu %}{% endblock %}
+                {% for m in mainmenu %}
+                    <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
+                {% endfor %}
+
+                {% if user.is_authenticated %}
+                    <li>Вы вошли как: <a href="{% url 'Users:profile' %}">{{ user.username }}</a></li>
+                    <li>
+                        <form method="post" action="{% url 'Users:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">Выйти</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'Users:login' %}">Войти</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

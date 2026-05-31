@@ -25,6 +25,9 @@
                     <li>
                         <h3>{{ post.title }}</h3>
                         <p>{{ post.description|truncatewords:30|linebreaks }}</p>
+                        {% if post.author %}
+                            <p>Автор: {{ post.author.username }}</p>
+                        {% endif %}
                         <p><a href="{% url 'Recipes:recipe_detail' post.slug %}">Читать далее</a></p>
                         {% if not forloop.last %}<hr>{% endif %}
                     </li>
@@ -34,7 +37,7 @@
     {% else %}
         <p>Нет рецептов.</p>
     {% endif %}
-    <p><a href="{% url 'Recipes:add_recipe_model' %}">Добавить рецепт</a></p>
+    <p><a href="{% url 'Recipes:addpage' %}">Добавить рецепт</a></p>
 {% endblock %}
 
 {% block navigation %}

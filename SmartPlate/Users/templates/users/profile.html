@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<h1>Профиль пользователя</h1>
+
+<div class="profile-info">
+    {% if user.photo %}
+        <p><img src="{{ user.photo.url }}" alt="{{ user.username }}" style="max-width: 200px;"></p>
+    {% endif %}
+    <p><b>Логин:</b> {{ user.username }}</p>
+    <p><b>E-mail:</b> {{ user.email }}</p>
+    {% if user.date_birth %}
+        <p><b>Дата рождения:</b> {{ user.date_birth }}</p>
+    {% endif %}
+</div>
+
+<h2>Изменение профиля</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><button type="submit">Сохранить</button></p>
+</form>
+
+<p><a href="{% url 'Users:password_change' %}">Изменить пароль</a></p>
+
+{% endblock %}

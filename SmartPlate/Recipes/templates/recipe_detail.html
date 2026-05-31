@@ -20,10 +20,18 @@
         <img src="{{ post.photo.url }}" alt="{{ post.title }}" style="max-width: 300px;">
     {% endif %}
     <div>{{ post.instructions|linebreaks }}</div>
-        {% if post %}
+    {% if post.author %}
+        <p>Автор: {{ post.author.username }}</p>
+    {% endif %}
+    {% if post %}
         <div class="edit-delete-links">
-            <a href="{% url 'Recipes:edit_page' post.pk %}">Редактировать</a>
-            <a href="{% url 'Recipes:delete_recipe' post.pk %}">Удалить</a>
+            {% if perms.Recipes.change_recipe %}
+                <p><a href="{% url 'Recipes:edit_page' post.pk %}">Редактировать</a></p>
+            {% endif %}
+
+            {% if perms.Recipes.delete_recipe %}
+                <p><a href="{% url 'Recipes:delete_recipe' post.pk %}">Удалить</a></p>
+            {% endif %}
         </div>
     {% endif %}
     <p><a href="{% url 'Recipes:home' %}">Назад к списку</a></p>

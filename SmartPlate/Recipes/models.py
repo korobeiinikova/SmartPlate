@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.conf import settings
 
 
 class CategoryEnum(models.TextChoices):
@@ -76,6 +77,14 @@ class Recipe(models.Model):
     photo = models.ImageField(upload_to="recipes_photos/%Y/%m/%d/",
                               blank=True, null=True,
                               verbose_name="Изображение рецепта")
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name='recipes',
+        null=True,
+        blank=True,
+        verbose_name='Автор'
+    )
 
     class Meta:
         ordering = ['-time_create']

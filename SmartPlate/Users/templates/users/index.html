@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<h1>Пользователи</h1>
+<p>Раздел регистрации, авторизации и профиля пользователя.</p>
+
+<ul>
+    <li><a href="{% url 'Users:login' %}">Авторизация</a></li>
+</ul>
+{% endblock %}
