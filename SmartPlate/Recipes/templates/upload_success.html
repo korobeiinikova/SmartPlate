@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
-
+{# Сообщение об успешной загрузке изображения. #}
+{% block title %}Файл загружен{% endblock %}
 {% block content %}
-<h1>Файл успешно загружен</h1>
-<p>Имя файла на сервере: {{ filename }}</p>
-<p><a href="{% url 'Recipes:upload_file' %}">Загрузить ещё</a></p>
+<section class="panel compact-card success-card">
+    <span class="success-symbol">✓</span>
+    <span class="eyebrow">Готово</span>
+    <h1>Файл успешно загружен</h1>
+    <p class="muted">Имя файла на сервере: <strong>{{ filename }}</strong></p>
+    <a class="button button-accent" href="{% url 'Recipes:upload_file' %}">Загрузить ещё</a>
+</section>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{# Отдельная форма изменения фотографии и даты рождения. #}
+
+{% block title %}Настройки профиля{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'Users:profile' %}">← Назад в профиль</a>
+<div class="page-heading form-card">
+    <h1>Настройки профиля</h1>
+    <p>Здесь можно изменить фотографию и дату рождения.</p>
+</div>
+<form class="panel form-card" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            <div class="form-error">{{ field.errors }}</div>
+        </div>
+    {% endfor %}
+    <div class="form-actions">
+        <button type="submit">Сохранить изменения</button>
+        <a class="button button-secondary" href="{% url 'Users:password_change' %}">Изменить пароль</a>
+    </div>
+</form>
+{% endblock %}

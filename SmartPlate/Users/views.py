@@ -1,21 +1,24 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
-from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+"""Представления авторизации и личного кабинета."""
+
 from django.contrib.auth import get_user_model
-from django.views.generic import UpdateView
-from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, UserPasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView, UpdateView
+
+from Recipes.models import Recipe
+
+from .forms import LoginUserForm, ProfileUserForm, RegisterUserForm
 
 
 def index(request):
+    """Стартовая страница раздела пользователей."""
     return render(request, 'users/index.html')
 
 
 class LoginUser(LoginView):
+    """Авторизация по логину или e-mail."""
     form_class = LoginUserForm
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация'}
@@ -24,68 +27,43 @@ class LoginUser(LoginView):
         return reverse_lazy('Recipes:home')
 
 
-def login_user(request):
-    if request.method == 'POST':
-        form = LoginUserForm(request.POST)
-
-        if form.is_valid():
-            cd = form.cleaned_data
-
-            user = authenticate(
-                request,
-                username=cd['username'],
-                password=cd['password']
-            )
-
-            if user and user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('Recipes:home'))
-    else:
-        form = LoginUserForm()
-
-    return render(request, 'users/login.html', {'form': form})
-
-
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('Users:login'))
-
-
-def register(request):
-    if request.method == 'POST':
-        form = RegisterUserForm(request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            return HttpResponseRedirect(reverse('Users:login'))
-    else:
-        form = RegisterUserForm()
-
-    return render(request, 'users/registration.html', {'form': form})
-
-
 class RegisterUser(CreateView):
+    """Регистрация нового пользователя."""
     form_class = RegisterUserForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('Users:login')
     extra_context = {'title': 'Регистрация'}
 
 
-class ProfileUser(LoginRequiredMixin, UpdateView):
+class ProfileUser(LoginRequiredMixin, TemplateView):
+    """Главная страница профиля со списком авторских рецептов."""
+    template_name = 'users/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['my_recipes'] = self.request.user.recipes.select_related('category')
+        return context
+
+
+class FavoriteRecipes(LoginRequiredMixin, TemplateView):
+    """Отдельная страница сохранённых пользователем рецептов."""
+    template_name = 'users/favorites.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['favorite_recipes'] = Recipe.objects.filter(
+            favorites__user=self.request.user,
+            is_published=True,
+        ).select_related('category', 'author')
+        return context
+
+
+class ProfileSettings(LoginRequiredMixin, UpdateView):
+    """Изменение фотографии и даты рождения текущего пользователя."""
     model = get_user_model()
     form_class = ProfileUserForm
-    template_name = 'users/profile.html'
+    template_name = 'users/profile_settings.html'
     success_url = reverse_lazy('Users:profile')
-    extra_context = {'title': 'Профиль пользователя'}
 
     def get_object(self, queryset=None):
         return self.request.user
-
-
-class UserPasswordChange(PasswordChangeView):
-    form_class = UserPasswordChangeForm
-    template_name = 'users/password_change_form.html'
-    success_url = reverse_lazy('Users:password_change_done')
-    extra_context = {'title': 'Смена пароля'}

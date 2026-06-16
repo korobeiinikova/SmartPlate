@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
+{# Форма авторизации пользователя. #}
 
-{% block title %}Авторизация{% endblock %}
+{% block title %}Вход{% endblock %}
 
 {% block content %}
-<h1>Авторизация</h1>
-
-<form method="post">
-    {% csrf_token %}
-
-    <input type="hidden" name="next" value="{{ next }}">
-
-    <div class="form-error">{{ form.non_field_errors }}</div>
-
-    {% for field in form %}
-        <p>
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-        </p>
-        <div class="form-error">{{ field.errors }}</div>
-    {% endfor %}
-
-    <p><button type="submit">Войти</button></p>
-
-    <p><a href="{% url 'Users:password_reset' %}">Забыли пароль?</a></p>
-</form>
+<div class="auth-layout">
+    <section class="auth-intro">
+        <h1>Вход на сайт</h1>
+        <p>Войдите, чтобы добавлять рецепты, комментарии и оценки.</p>
+    </section>
+    <form class="panel auth-card" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <div class="form-error">{{ field.errors }}</div>
+            </div>
+        {% endfor %}
+        <button class="button button-accent button-wide" type="submit">Войти</button>
+        <div class="auth-links">
+            <a href="{% url 'Users:password_reset' %}">Забыли пароль?</a>
+            <span>Нет аккаунта? <a href="{% url 'Users:register' %}">Зарегистрироваться</a></span>
+        </div>
+    </form>
+</div>
 {% endblock %}

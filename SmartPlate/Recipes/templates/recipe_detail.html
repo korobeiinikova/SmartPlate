@@ -1,38 +1,115 @@
 {% extends 'base.html' %}
-{% load static %}
+{# Детальная страница рецепта, избранное и комментарии. #}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
+    <a class="back-link" href="{% url 'Recipes:home' %}">← Назад к рецептам</a>
 
-    {% with post.tags.all as tags %}
-        {% if tags %}
-            <div class="recipe-tags">
-                <strong>Теги:</strong>
-                {% for t in tags %}
-                    {{ t.name }}{% if not forloop.last %}, {% endif %}
+    <article class="recipe-detail">
+        {# Основная информация, автор, теги и фотография. #}
+        <header class="recipe-detail-header">
+            <div class="recipe-detail-copy">
+                <span class="eyebrow">{{ post.category.name }}</span>
+                <h1>{{ post.title }}</h1>
+                {% if post.description %}<p class="recipe-lead">{{ post.description }}</p>{% endif %}
+                <div class="recipe-byline">
+                    {% if post.author %}
+                        <span class="avatar-mini">{{ post.author.username|first|upper }}</span>
+                        <span>Рецепт добавил <strong>{{ post.author.username }}</strong></span>
+                    {% endif %}
+                    <time datetime="{{ post.time_create|date:'c' }}">{{ post.time_create|date:"d.m.Y" }}</time>
+                </div>
+                {% with post.tags.all as tags %}
+                    {% if tags %}
+                        <div class="recipe-tags">
+                            {% for tag in tags %}<a class="recipe-tag" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="recipe-detail-media">
+                {% if post.photo %}
+                    <img src="{{ post.photo.url }}" alt="{{ post.title }}">
+                {% else %}
+                    <div class="recipe-detail-placeholder">{{ post.title|first|upper }}</div>
+                {% endif %}
+            </div>
+        </header>
+
+        {# Пищевая ценность блюда. #}
+        <div class="nutrition-grid">
+            <div><strong>{{ post.calories|floatformat:0 }}</strong><span>ккал</span></div>
+            <div><strong>{{ post.proteins|floatformat:1 }}</strong><span>белки, г</span></div>
+            <div><strong>{{ post.fats|floatformat:1 }}</strong><span>жиры, г</span></div>
+            <div><strong>{{ post.carbs|floatformat:1 }}</strong><span>углеводы, г</span></div>
+        </div>
+
+        {# Инструкция и боковая панель действий. #}
+        <div class="recipe-content-layout">
+            <section class="panel recipe-instructions">
+                <h2>Как приготовить</h2>
+                <div class="recipe-text">{{ post.instructions|linebreaks }}</div>
+            </section>
+
+            <aside class="recipe-sidebar">
+                <section id="favorite" class="panel favorite-panel">
+                    <h2>Избранное</h2>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'Recipes:toggle_favorite' post.slug %}">
+                            {% csrf_token %}
+                            {% if is_favorite %}
+                                <button class="button button-secondary favorite-button" type="submit">Удалить из избранного</button>
+                            {% else %}
+                                <button class="favorite-button" type="submit">Добавить в избранное</button>
+                            {% endif %}
+                        </form>
+                        <p class="muted">Добавили в избранное: {{ favorites_count }}</p>
+                    {% else %}
+                        <p class="muted">Добавили в избранное: {{ favorites_count }}</p>
+                        <p><a href="{% url 'Users:login' %}?next={{ request.path }}">Войдите</a>, чтобы сохранить рецепт.</p>
+                    {% endif %}
+                </section>
+
+                {% if user == post.author or user.is_staff %}
+                    <section class="panel owner-actions">
+                        <h3>Управление рецептом</h3>
+                        <a class="button button-secondary" href="{% url 'Recipes:edit_page' post.pk %}">Редактировать</a>
+                        <a class="button button-danger" href="{% url 'Recipes:delete_recipe' post.pk %}">Удалить</a>
+                    </section>
+                {% endif %}
+            </aside>
+        </div>
+
+        {# Форма и список комментариев. #}
+        <section id="comments" class="panel recipe-comments">
+            <h2>Комментарии</h2>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'Recipes:add_comment' post.slug %}" class="comment-form">
+                    {% csrf_token %}
+                    {{ comment_form.text }}
+                    <button type="submit">Отправить комментарий</button>
+                </form>
+            {% else %}
+                <div class="login-prompt"><p><a href="{% url 'Users:login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить комментарий.</p></div>
+            {% endif %}
+
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <article class="comment">
+                        <div class="avatar-mini">{{ comment.author.username|first|upper }}</div>
+                        <div>
+                            <header>
+                                <strong>{{ comment.author.username }}</strong>
+                                <time datetime="{{ comment.time_create|date:'c' }}">{{ comment.time_create|date:"d.m.Y H:i" }}</time>
+                            </header>
+                            <div>{{ comment.text|linebreaks }}</div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="empty-comments"><p>Комментариев пока нет.</p></div>
                 {% endfor %}
             </div>
-        {% endif %}
-    {% endwith %}
-    {% if post.photo %}
-        <img src="{{ post.photo.url }}" alt="{{ post.title }}" style="max-width: 300px;">
-    {% endif %}
-    <div>{{ post.instructions|linebreaks }}</div>
-    {% if post.author %}
-        <p>Автор: {{ post.author.username }}</p>
-    {% endif %}
-    {% if post %}
-        <div class="edit-delete-links">
-            {% if perms.Recipes.change_recipe %}
-                <p><a href="{% url 'Recipes:edit_page' post.pk %}">Редактировать</a></p>
-            {% endif %}
-
-            {% if perms.Recipes.delete_recipe %}
-                <p><a href="{% url 'Recipes:delete_recipe' post.pk %}">Удалить</a></p>
-            {% endif %}
-        </div>
-    {% endif %}
-    <p><a href="{% url 'Recipes:home' %}">Назад к списку</a></p>
+        </section>
+    </article>
 {% endblock %}

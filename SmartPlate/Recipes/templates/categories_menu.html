@@ -1,5 +1,10 @@
+{# Частичный шаблон списка категорий для фильтра каталога. #}
 {% if cats %}
     <div class="categories-cloud">
+        <a href="{% url 'Recipes:home' %}"
+           class="category-tag {% if not cat_selected %}selected-category{% endif %}">
+            Все рецепты
+        </a>
         {% for cat in cats %}
             <a href="{% url 'Recipes:category' cat.slug %}"
                class="category-tag {% if cat.id == cat_selected %}selected-category{% endif %}">

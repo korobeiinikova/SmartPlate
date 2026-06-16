@@ -1,29 +1,71 @@
 {% extends 'base.html' %}
+{# Основная страница профиля со списком рецептов пользователя. #}
 
-{% block title %}Профиль пользователя{% endblock %}
+{% block title %}Профиль {{ user.username }}{% endblock %}
 
 {% block content %}
-<h1>Профиль пользователя</h1>
-
-<div class="profile-info">
+{# Краткие данные пользователя и переходы в настройки/избранное. #}
+<section class="panel profile-header">
     {% if user.photo %}
-        <p><img src="{{ user.photo.url }}" alt="{{ user.username }}" style="max-width: 200px;"></p>
+        <img class="profile-photo" src="{{ user.photo.url }}" alt="{{ user.username }}">
+    {% else %}
+        <div class="profile-photo profile-placeholder">{{ user.username|first|upper }}</div>
     {% endif %}
-    <p><b>Логин:</b> {{ user.username }}</p>
-    <p><b>E-mail:</b> {{ user.email }}</p>
-    {% if user.date_birth %}
-        <p><b>Дата рождения:</b> {{ user.date_birth }}</p>
+    <div class="profile-user-info">
+        <div class="profile-name-row">
+            <h1>{{ user.username }}</h1>
+            <a class="icon-button" href="{% url 'Users:profile_settings' %}" title="Настройки профиля" aria-label="Настройки профиля">⚙</a>
+        </div>
+        <p>{{ user.email }}</p>
+        {% if user.date_birth %}
+            <p class="muted">Дата рождения: {{ user.date_birth|date:"d.m.Y" }}</p>
+        {% endif %}
+    </div>
+    <a class="button button-accent profile-add-button" href="{% url 'Users:favorites' %}">Избранное</a>
+</section>
+
+{# Рецепты, автором которых является текущий пользователь. #}
+<section class="profile-recipes-section">
+    <div class="section-heading">
+        <h2>Мои рецепты</h2>
+        <div class="recipe-count-actions">
+            <span class="muted">Всего: {{ my_recipes|length }}</span>
+            <a class="icon-button add-recipe-button" href="{% url 'Recipes:addpage' %}" title="Добавить рецепт" aria-label="Добавить рецепт">+</a>
+        </div>
+    </div>
+    {% if my_recipes %}
+        <div class="profile-recipe-grid">
+            {% for recipe in my_recipes %}
+                <article class="profile-recipe-card">
+                    <a class="profile-recipe-image"
+                       href="{% if recipe.is_published %}{{ recipe.get_absolute_url }}{% else %}{% url 'Recipes:edit_page' recipe.pk %}{% endif %}">
+                        {% if recipe.photo %}
+                            <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}">
+                        {% else %}
+                            <span>{{ recipe.title|first|upper }}</span>
+                        {% endif %}
+                    </a>
+                    <div>
+                        <h3>
+                            <a href="{% if recipe.is_published %}{{ recipe.get_absolute_url }}{% else %}{% url 'Recipes:edit_page' recipe.pk %}{% endif %}">
+                                {{ recipe.title }}
+                            </a>
+                        </h3>
+                        <p>{{ recipe.category.name }}</p>
+                        {% if recipe.is_published %}
+                            <span class="status status-published">Опубликован</span>
+                        {% else %}
+                            <span class="status status-draft">Черновик</span>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Вы ещё не добавили ни одного рецепта.</p>
+            <a class="button button-accent" href="{% url 'Recipes:addpage' %}">Добавить первый рецепт</a>
+        </div>
     {% endif %}
-</div>
-
-<h2>Изменение профиля</h2>
-
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p><button type="submit">Сохранить</button></p>
-</form>
-
-<p><a href="{% url 'Users:password_change' %}">Изменить пароль</a></p>
-
+</section>
 {% endblock %}

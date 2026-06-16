@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
-
+{# Отдельная демонстрационная форма загрузки изображения. #}
+{% block title %}Загрузка изображения{% endblock %}
 {% block content %}
-<h1>Загрузка файла на сервер</h1>
-<form method="post" enctype="multipart/form-data">
+<div class="page-heading compact-card">
+    <span class="eyebrow">Медиафайл</span>
+    <h1>Загрузить изображение</h1>
+    <p>Выберите изображение с компьютера. Поддерживаются стандартные графические форматы.</p>
+</div>
+<form class="panel compact-card" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Отправить</button>
+    <button class="button button-accent" type="submit">Загрузить</button>
 </form>
 {% endblock %}

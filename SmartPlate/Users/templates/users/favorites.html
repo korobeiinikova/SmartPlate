@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{# Отдельная страница рецептов, сохранённых пользователем. #}
+
+{% block title %}Избранное{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'Users:profile' %}">← Назад в профиль</a>
+<section class="profile-recipes-section">
+    <div class="section-heading">
+        <h1>Избранное</h1>
+        <span class="muted">Всего: {{ favorite_recipes|length }}</span>
+    </div>
+    {% if favorite_recipes %}
+        <div class="profile-recipe-grid">
+            {% for recipe in favorite_recipes %}
+                <article class="profile-recipe-card">
+                    <a class="profile-recipe-image" href="{{ recipe.get_absolute_url }}">
+                        {% if recipe.photo %}
+                            <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}">
+                        {% else %}
+                            <span>{{ recipe.title|first|upper }}</span>
+                        {% endif %}
+                    </a>
+                    <div>
+                        <h3><a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a></h3>
+                        <p>{{ recipe.category.name }}</p>
+                        {% if recipe.author %}<p>Автор: {{ recipe.author.username }}</p>{% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>В избранном пока ничего нет.</p>
+            <a class="button button-secondary" href="{% url 'Recipes:home' %}">Посмотреть рецепты</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

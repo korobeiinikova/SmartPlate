@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
+{# Информация о назначении и возможностях сайта. #}
+
+{% block title %}О SmartPlate{% endblock %}
 
 {% block content %}
-<h1>О сайте</h1>
-<p>Сайт для публикации кулинарных рецептов.</p>
+<section class="about-hero panel">
+    <div>
+        <h1>О сайте</h1>
+        <p>SmartPlate — учебный сайт для публикации и просмотра кулинарных рецептов.</p>
+        <a class="button button-accent" href="{% url 'Recipes:addpage' %}">Поделиться рецептом</a>
+    </div>
+</section>
 
-{% for recipe in page_obj %}
-    <p>{{ recipe.title }}</p>
-{% endfor %}
+<section class="feature-grid">
+    <article class="panel"><h2>Публикация</h2><p>Пользователи могут добавлять свои рецепты и фотографии.</p></article>
+    <article class="panel"><h2>Комментарии</h2><p>Под рецептами можно оставлять комментарии.</p></article>
+    <article class="panel"><h2>Оценки</h2><p>Понравившиеся рецепты можно оценивать.</p></article>
+</section>
 
-<nav>
-    <ul>
-        {% for p in page_obj.paginator.page_range %}
-            <li><a href="?page={{ p }}">{{ p }}</a></li>
+{% if page_obj %}
+<section class="about-recipes">
+    <div class="section-heading"><div><h2>Последние рецепты</h2></div></div>
+    <div class="simple-recipe-list">
+        {% for recipe in page_obj %}
+            <a href="{{ recipe.get_absolute_url }}"><span>{{ recipe.title }}</span><span>→</span></a>
         {% endfor %}
-    </ul>
-</nav>
+    </div>
+</section>
+{% endif %}
 {% endblock %}

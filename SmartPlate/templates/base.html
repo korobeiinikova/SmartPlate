@@ -1,40 +1,72 @@
 <!DOCTYPE html>
 {% load static %}
+{# Общий каркас всех страниц: шапка, основное содержимое и подвал. #}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#245c45">
     <title>{% block title %}SmartPlate{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <header>
-        <img src="{% static 'images/kok.png' %}" alt="Логотип" height="40" class="logo">
-        <nav>
-            <ul class="menu">
-                {% for m in mainmenu %}
-                    <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
-                {% endfor %}
+    {# Верхняя навигация и данные текущего пользователя. #}
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="{% url 'Recipes:home' %}" aria-label="SmartPlate — главная">
+                <span class="brand-mark">
+                    <img src="{% static 'images/kok.png' %}" alt="">
+                </span>
+                <span>
+                    <strong>SmartPlate</strong>
+                </span>
+            </a>
 
+            <nav class="main-nav" aria-label="Основная навигация">
+                {% for m in mainmenu %}
+                    <a href="{% url m.url_name %}">{{ m.title }}</a>
+                {% endfor %}
+            </nav>
+
+            <div class="account-actions">
                 {% if user.is_authenticated %}
-                    <li>Вы вошли как: <a href="{% url 'Users:profile' %}">{{ user.username }}</a></li>
-                    <li>
-                        <form method="post" action="{% url 'Users:logout' %}">
-                            {% csrf_token %}
-                            <button type="submit">Выйти</button>
-                        </form>
-                    </li>
+                    <a class="profile-link" href="{% url 'Users:profile' %}">
+                        {% if user.photo %}
+                            <img class="avatar-mini avatar-image" src="{{ user.photo.url }}" alt="{{ user.username }}">
+                        {% else %}
+                            <span class="avatar-mini">{{ user.username|first|upper }}</span>
+                        {% endif %}
+                        <span>{{ user.username }}</span>
+                    </a>
+                    <form method="post" action="{% url 'Users:logout' %}">
+                        {% csrf_token %}
+                        <button class="button button-ghost button-small" type="submit">Выйти</button>
+                    </form>
                 {% else %}
-                    <li><a href="{% url 'Users:login' %}">Войти</a></li>
+                    <a class="button button-ghost button-small" href="{% url 'Users:login' %}">Войти</a>
+                    <a class="button button-light button-small" href="{% url 'Users:register' %}">Регистрация</a>
                 {% endif %}
-            </ul>
-        </nav>
+            </div>
+        </div>
     </header>
-    <main>
-        {% block content %}{% endblock %}
-        {% block navigation %}{% endblock %}
+
+    {# Дочерние шаблоны подставляют содержимое в эти блоки. #}
+    <main class="site-main">
+        <div class="container">
+            {% block content %}{% endblock %}
+            {% block navigation %}{% endblock %}
+        </div>
     </main>
-    <footer>
-        <p>&copy; 2026 SmartPlate</p>
+
+    {# Общий подвал сайта. #}
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>SmartPlate</strong>
+                <p>Сайт с рецептами</p>
+            </div>
+            <p>&copy; 2026 SmartPlate</p>
+        </div>
     </footer>
 </body>
 </html>

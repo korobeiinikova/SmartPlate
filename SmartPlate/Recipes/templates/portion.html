@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Рецепты на {{ count }} порции{% endblock %}
-
+{# Демонстрационная страница выбора количества порций. #}
+{% block title %}Рецепты на {{ count }} порций{% endblock %}
 {% block content %}
-    <h1>Рецепты на {{ count }} порции</h1>
-    <p>Здесь будут рецепты, рассчитанные на {{ count }} порций.</p>
+<section class="panel compact-card">
+    <span class="eyebrow">Расчёт порций</span>
+    <h1>Рецепты на {{ count }} порций</h1>
+    <p class="muted">Здесь появятся рецепты, ингредиенты которых рассчитаны на выбранное количество порций.</p>
+    <a class="button button-secondary" href="{% url 'Recipes:home' %}">Вернуться к рецептам</a>
+</section>
 {% endblock %}

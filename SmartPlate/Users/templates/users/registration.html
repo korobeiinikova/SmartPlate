@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
+{# Форма регистрации нового пользователя. #}
 
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-<h1>Регистрация</h1>
-
-<form method="post">
-    {% csrf_token %}
-
-    <div class="form-error">{{ form.non_field_errors }}</div>
-
-    {% for field in form %}
-        <p>
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-        </p>
-        <div class="form-error">{{ field.errors }}</div>
-    {% endfor %}
-
-    <p><button type="submit">Зарегистрироваться</button></p>
-</form>
+<div class="auth-layout">
+    <section class="auth-intro">
+        <h1>Регистрация</h1>
+        <p>Создайте аккаунт, чтобы пользоваться всеми возможностями сайта.</p>
+    </section>
+    <form class="panel auth-card" method="post">
+        {% csrf_token %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<span class="helptext">{{ field.help_text|safe }}</span>{% endif %}
+                <div class="form-error">{{ field.errors }}</div>
+            </div>
+        {% endfor %}
+        <button class="button button-accent button-wide" type="submit">Зарегистрироваться</button>
+        <div class="auth-links"><span>Уже есть аккаунт? <a href="{% url 'Users:login' %}">Войти</a></span></div>
+    </form>
+</div>
 {% endblock %}

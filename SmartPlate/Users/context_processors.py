@@ -1,9 +1,11 @@
-menu = [
+"""Глобальные данные, доступные во всех шаблонах сайта."""
+
+MAIN_MENU = [
     {'title': 'Рецепты', 'url_name': 'Recipes:home'},
     {'title': 'О сайте', 'url_name': 'Recipes:about'},
-    {'title': 'Пользователь', 'url_name': 'Users:profile'},
 ]
 
 
 def get_users_context(request):
-    return {'mainmenu': menu}
+    """Добавляет пункты главного меню в контекст каждого шаблона."""
+    return {'mainmenu': MAIN_MENU}

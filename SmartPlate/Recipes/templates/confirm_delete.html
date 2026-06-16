@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
+{# Подтверждение необратимого удаления рецепта. #}
+
+{% block title %}Удаление рецепта{% endblock %}
 
 {% block content %}
-<h1>Удаление рецепта</h1>
-<p>Вы уверены, что хотите удалить рецепт "{{ object.title }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Удалить</button>
-    <a href="{% url 'Recipes:home' %}">Отмена</a>
-</form>
+<section class="panel compact-card danger-card">
+    <span class="danger-symbol">!</span>
+    <span class="eyebrow">Необратимое действие</span>
+    <h1>Удалить рецепт?</h1>
+    <p>Рецепт «{{ object.title }}», его комментарии и оценки будут удалены без возможности восстановления.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button class="button button-danger" type="submit">Да, удалить</button>
+            <a class="button button-secondary" href="{{ object.get_absolute_url }}">Отмена</a>
+        </div>
+    </form>
+</section>
 {% endblock %}
